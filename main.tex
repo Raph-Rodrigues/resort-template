@@ -1,0 +1,116 @@
+% !TEX program = lualatex
+% !TEX encoding = UTF-8 Unicode
+% ==========================================================================
+% Template de relatório científico
+% Formatação baseada em "Relatoriomassa.doc":
+%   A4, margens de 25 mm, duas colunas, Times New Roman 12 pt,
+%   título em Arial 14 pt, legendas/tabelas em 10 pt.
+%
+% Compile com LuaLaTeX:
+%   latexmk -lualatex main.tex
+% ==========================================================================
+% Este template depende do interpretador Lua embutido no LuaLaTeX.
+% A verificação abaixo troca o erro críptico do fontspec por uma mensagem
+% clara caso o arquivo seja compilado com pdfLaTeX por engano.
+\ifdefined\directlua\else
+  \errmessage{Este template exige LuaLaTeX. Compile com: latexmk -lualatex main.tex}%
+  \expandafter\endinput
+\fi
+
+\documentclass{relatorio}
+
+\directlua{
+  Relatorio = dofile("scripts/relatorio.lua")
+  Relatorio.inicializar("config")
+}
+
+% Registra o português e carrega os padrões de hifenização incluídos no projeto.
+\directlua{Relatorio.hifenizacao("scripts/hyph-pt.tex")}
+\AtBeginDocument{\selectlanguage{brazilian}}
+
+\hypersetup{
+  pdftitle={Relatório científico},
+  pdfauthor={Autores do relatório}
+}
+
+% Margem extra para evitar linhas muito apertadas nas colunas estreitas.
+\setlength{\emergencystretch}{3em}
+
+\begin{document}
+
+\maketitle
+
+% ==========================================================================
+\section{Introdução}
+
+O trabalho deve se iniciar com uma breve introdução, onde os autores devem situar os leitores sobre o assunto que será abordado no corpo do trabalho. Aqui é válido escrever uma breve descrição da física envolvida no problema. A introdução deve usar de referências utilizadas pelo grupo para pesquisa, sejam elas livros, artigos ou páginas da Internet \citep{osada1972}.
+
+Não importa em que parte do relatório, quando for incluir Tabelas e Figuras, siga os exemplos abaixo. As Tabelas e Figuras sempre devem ser citadas em alguma parte do texto, de acordo com seus números de sequência no texto. Por exemplo: ``A Tabela~\ref{tab:eleitorado} contém os dados da evolução do eleitorado da cidade de Santa Rita da Perpétua Agonia do Sapucaí Mirim do Norte...''
+
+\tabela{tabela1}
+
+Um exemplo para Figuras: ``A Figura~\ref{fig:notas} mostra os dados experimentais acerca do desempenho dos alunos na prova de metodologia científica, conforme as horas de estudo...''
+
+\figura{figura1}
+
+Caso as Tabelas e Figuras fiquem pequenas demais no espaço de uma única coluna (elas sempre precisam ficar nítidas e de fácil leitura), então pode-se utilizar todo o espaço da página, a partir do topo da página seguinte à citação no texto do relatório. Por exemplo: ``A Tabela~\ref{tab:pendulo} mostra os ensaios da experiência para determinar a aceleração da gravidade através de um pêndulo de comprimento variável...''. Para Figuras: ``A Figura~\ref{fig:circuito} apresenta o esquema para a obtenção de dados de voltagem e corrente para a determinação da resistência interna de uma pilha...''
+
+Equações precisam ter espaçamento no texto adjacente e margem esquerda, além de serem numeradas conforme vão aparecendo.
+
+\clearpage
+
+\begin{faixa}
+  \tabela{tabela2}
+  \figura{figura2}
+\end{faixa}
+
+\vspace*{10pt}
+\enlargethispage{\baselineskip}
+
+Quando for fazer referência no texto a alguma equação, escreva ``...Equação (número)...''. Por exemplo: ``A Equação~\eqref{eq:queda} mostra a dependência da altura com o tempo em um movimento de queda livre...''
+
+\begin{equation}\label{eq:queda}
+  h(t) = h_0 - \frac{1}{2} g t^2
+\end{equation}
+
+O último parágrafo da Introdução deve remeter o leitor aos itens seguintes do relatório, descrevendo brevemente o que eles contêm.
+
+% ==========================================================================
+\section{Materiais e Métodos}
+
+O item 2 deve constar a descrição detalhada dos materiais utilizados na experiência, bem como os instrumentos de medida. Igualmente importante é a descrição detalhada do experimento e da metodologia e procedimentos utilizados. Nesta parte deverão estar as tabelas de dados obtidos e a análise direta dos resultados.
+
+\subsection{Materiais}
+
+Descreva o que foi montado e quais são os materiais utilizados no experimento. Descreva detalhadamente os instrumentos de medida utilizados: tipo ou modelo, fabricante, ponto zero e fundo de escala, precisão e erro, faixa dinâmica e unidade de medida. Coloque uma foto e/ou um desenho esquemático do experimento. Para a padronização das incertezas, consulte \citet{unifei2014}.
+
+\subsection{Modelo Metodológico}
+
+Descreva como você obteve os dados, passo-a-passo. Comente em cada passo possíveis problemas que poderão afetar a medida final. Descreva as quantidades medidas. Descreva as equações e modelos utilizados para a obtenção da medida final. Descreva a análise estatística e/ou a análise gráfica utilizada, conforme discutido por \citet{giller1996}.
+
+\subsection{Obtenção dos Dados}
+
+Descreva os dados obtidos, situando local e data. Comente se os dados são válidos ou se existem resultados espúrios. Separe textualmente o que são medidas primárias e secundárias. Faça uso de Tabelas para mostrar os dados.
+
+\subsection{Análise dos Resultados}
+
+Descreva os resultados derivados, sejam de cálculos, estatística ou análise gráfica, incluindo análise referente a ajuste de curvas. Atente para os erros envolvidos. Resultados finais devem ter unidades compatíveis com o Sistema Internacional.
+
+% ==========================================================================
+\section{Discussão do Método e dos Resultados}
+
+O item 3 deve constar a discussão do experimento e seus resultados no âmbito teórico. Discuta a acurácia da medida e possíveis erros sistemáticos e metodológicos. Se o experimento não chegou a bons resultados, explique o porquê.
+
+% ==========================================================================
+\section{Conclusões}
+
+Conclua seu trabalho apontando os principais resultados obtidos e suas aplicações. Proponha desenvolvimentos em relação aos seus resultados e melhorias que podem ser feitas para se obter resultados ainda melhores.
+
+% ==========================================================================
+\section{Referências}
+
+Aqui devem aparecer as referências CITADAS ao longo do artigo. Nunca liste uma referência que não foi citada no artigo ou nunca cite no artigo uma fonte sem que ela conste nas Referências. As referências devem ser citadas no formato ``autor (ano)'' ou ``(autor, ano)'' ao longo do texto. Não se esqueça que usa-se o último sobrenome do autor para tal. Por exemplo, trabalhos em que eu (Prof. Gabriel Rodrigues Hickel) sou autor aparecem ``Hickel, G.R.'' na lista de autores. A citação ao longo do texto ficaria: ``Em um trabalho recente, Satya et al. (1999) propuseram...'' ou ``Recentemente (Carr \& Ferreira, 1998) sugeriram que...''. O ``et al.'' é normalmente utilizado quando o trabalho tem mais de 3 autores. Então, escreve-se o nome do primeiro e depois ``et al.''. No item 5, as referências devem ser completas e listadas em ordem alfabética do sobrenome do primeiro autor. Veja os exemplos abaixo:
+
+\referencias
+
+\end{document}
