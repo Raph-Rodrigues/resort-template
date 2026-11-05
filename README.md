@@ -9,7 +9,7 @@ A montagem do documento é automatizada por um módulo em Lua: título, autores,
 resumo, tabelas (a partir de CSV), figuras, citações e lista de referências são
 gerados a partir de arquivos de configuração, sem escrever LaTeX repetitivo.
 
-**[Visualize o template compilado em PDF](main.pdf).**
+**![Visualize o template compilado em PDF](main.pdf).**
 
 ## Requisitos
 
