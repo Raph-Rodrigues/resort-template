@@ -9,7 +9,10 @@ A montagem do documento é automatizada por um módulo em Lua: título, autores,
 resumo, tabelas (a partir de CSV), figuras, citações e lista de referências são
 gerados a partir de arquivos de configuração, sem escrever LaTeX repetitivo.
 
-**![Visualize o template compilado em PDF](main.pdf).**
+**[Veja o template compilado em PDF](main.pdf).**
+**![Pagina1](main_png/main-1.png)**
+**![Pagina2](main_png/main-2.png)**
+**![Pagina3](main_png/main-3.png)**
 
 ## Requisitos
 
@@ -50,9 +53,21 @@ Também há um `Makefile`:
 
 ```bash
 make          # compila main.pdf
+make png      # converte cada página em PNG dentro de main_png/
 make clean    # remove arquivos auxiliares
 make distclean # remove também o PDF
 ```
+
+O script também pode ser chamado diretamente:
+
+```bash
+lua scripts/pdf_para_png.lua [arquivo.pdf] [diretorio_saida] [resolucao_dpi]
+```
+
+Por padrão, converte `main.pdf` para PNGs de 150 DPI no diretório `main_png/`.
+Por exemplo, `lua scripts/pdf_para_png.lua main.pdf imagens 300` gera as páginas
+na resolução de 300 DPI em `imagens/`. O script requer `pdftoppm`, disponível
+no pacote Poppler.
 
 O arquivo `.latexmkrc` já fixa o modo LuaLaTeX, então `latexmk main.tex` também
 funciona. O `main.tex` começa com `% !TEX program = lualatex`, diretiva
@@ -68,6 +83,7 @@ uma mensagem explícita em vez do erro genérico do `fontspec`.
 ├── relatorio.cls             # classe com a formatação e a interface Lua
 ├── scripts/
 │   ├── relatorio.lua         # interface Lua chamada pelo LaTeX
+│   ├── pdf_para_png.lua      # converte o PDF em imagens PNG
 │   ├── relatorio/
 │   │   ├── comum.lua         # leitura de CSV e formatação numérica
 │   │   ├── tabelas.lua       # geração de tabelas
