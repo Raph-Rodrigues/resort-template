@@ -60,6 +60,16 @@
 % --------------------------------------------------------------------------
 \RequirePackage{graphicx}
 \RequirePackage{xcolor}
+\RequirePackage{tikz}
+\RequirePackage{siunitx}
+\sisetup{
+  input-decimal-markers = {.},
+  output-decimal-marker = {,},
+  group-separator = {.},
+  group-minimum-digits = 4,
+  per-mode = symbol,
+  mode = match
+}
 \RequirePackage{array}
 \RequirePackage{tabularx}
 \RequirePackage{float}

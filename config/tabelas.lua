@@ -27,7 +27,7 @@ return {
     largura = "\\columnwidth",
     posicao = "H",
     colunas = {
-      { titulo = "Ano", campo = "ano", formato = "texto" },
+      { titulo = "Ano", campo = "ano", formato = "numero" },
       { titulo = "Número de Eleitores", campo = "eleitores", formato = "milhar" },
     },
   },
@@ -44,10 +44,10 @@ return {
     pesos = { 0.82, 1.05, 1.05, 1.05, 1.03 },
     colunas = {
       { titulo = "Ensaio", campo = "ensaio", formato = "texto" },
-      { titulo = "$\\symbf{L}$ ($\\pm$ 0,001) (m)", campo = "L", campos = { "L", "L_erro" }, formato = "mais_menos" },
-      { titulo = "$\\symbf{P}$ ($\\pm$ 0,02) (s)", campo = "P", campos = { "P", "P_erro" }, formato = "mais_menos" },
-      { titulo = "$\\symbf{g}$ (m/s$^2$)", campo = "g", campos = { "g", "g_erro" }, formato = "mais_menos" },
-      { titulo = "E.A. (\\%)", campo = "EA", formato = "decimal" },
+      { titulo = "$\\symbf{L}$ ($\\pm\\SI{0.001}{\\meter}$)", campo = "L", campos = { "L", "L_erro" }, formato = "mais_menos" },
+      { titulo = "$\\symbf{P}$ ($\\pm\\SI{0.02}{\\second}$)", campo = "P", campos = { "P", "P_erro" }, formato = "mais_menos" },
+      { titulo = "$\\symbf{g}$ ($\\si{\\meter\\per\\second\\squared}$)", campo = "g", campos = { "g", "g_erro" }, formato = "mais_menos" },
+      { titulo = "E.A. ($\\si{\\percent}$)", campo = "EA", formato = "decimal" },
     },
   },
 }

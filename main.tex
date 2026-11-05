@@ -49,7 +49,7 @@ Não importa em que parte do relatório, quando for incluir Tabelas e Figuras, s
 
 \tabela{tabela1}
 
-Um exemplo para Figuras: ``A Figura~\ref{fig:notas} mostra os dados experimentais acerca do desempenho dos alunos na prova de metodologia científica, conforme as horas de estudo...''
+Um exemplo para Figuras: ``A Figura~\ref{fig:notas} mostra os dados experimentais acerca do desempenho dos alunos na prova de metodologia científica, conforme o tempo de estudo...''
 
 \figura{figura1}
 
@@ -70,7 +70,9 @@ Equações precisam ter espaçamento no texto adjacente e margem esquerda, além
 Quando for fazer referência no texto a alguma equação, escreva ``...Equação (número)...''. Por exemplo: ``A Equação~\eqref{eq:queda} mostra a dependência da altura com o tempo em um movimento de queda livre...''
 
 \begin{equation}\label{eq:queda}
-  h(t) = h_0 - \frac{1}{2} g t^2
+  h(t) = h_0 - \frac{1}{2} g t^2,
+  \qquad
+  g = \SI{9.81}{\meter\per\second\squared}
 \end{equation}
 
 O último parágrafo da Introdução deve remeter o leitor aos itens seguintes do relatório, descrevendo brevemente o que eles contêm.
@@ -94,7 +96,10 @@ Descreva os dados obtidos, situando local e data. Comente se os dados são váli
 
 \subsection{Análise dos Resultados}
 
-Descreva os resultados derivados, sejam de cálculos, estatística ou análise gráfica, incluindo análise referente a ajuste de curvas. Atente para os erros envolvidos. Resultados finais devem ter unidades compatíveis com o Sistema Internacional.
+Descreva os resultados derivados, sejam de cálculos, estatística ou análise gráfica, incluindo análise referente a ajuste de curvas. Atente para os erros envolvidos. Expresse os resultados finais com unidades do Sistema Internacional. Use
+\verb|\num{...}| para números e \verb|\SI{...}{...}| para grandezas com unidade;
+por exemplo, \verb|\SI{9.81}{\meter\per\second\squared}| é impresso com vírgula
+decimal e unidade SI.
 
 % ==========================================================================
 \section{Discussão do Método e dos Resultados}

@@ -6,6 +6,7 @@ TARGET   = $(MAIN).pdf
 
 SOURCES = $(MAIN).tex relatorio.cls \
           scripts/relatorio.lua \
+          $(wildcard scripts/relatorio/*.lua) \
           scripts/hyph-pt.tex \
           $(wildcard config/*.lua) \
           $(wildcard dados/*.csv) \

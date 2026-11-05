@@ -9,13 +9,16 @@ A montagem do documento é automatizada por um módulo em Lua: título, autores,
 resumo, tabelas (a partir de CSV), figuras, citações e lista de referências são
 gerados a partir de arquivos de configuração, sem escrever LaTeX repetitivo.
 
+**[Visualize o template compilado em PDF](main.pdf).**
+
 ## Requisitos
 
 - TeX Live 2021 ou superior (ou MiKTeX atualizado) com:
   - `lualatex` e `latexmk`;
   - pacotes `fontspec`, `unicode-math`, `geometry`, `babel`, `microtype`,
     `graphicx`, `xcolor`, `array`, `tabularx`, `float`, `cuted`, `caption`,
-    `titlesec`, `fancyhdr`, `indentfirst`, `enumitem`, `hyperref`.
+    `tikz` (pacote PGF), `siunitx`, `titlesec`, `fancyhdr`, `indentfirst`,
+    `enumitem`, `hyperref`.
 - Fontes Times New Roman e Arial (Microsoft). Caso não estejam instaladas, o
   template usa automaticamente as equivalentes livres **Liberation Serif** e
   **Liberation Sans**, metricamente compatíveis.
@@ -64,7 +67,14 @@ uma mensagem explícita em vez do erro genérico do `fontspec`.
 ├── main.tex                  # conteúdo do relatório
 ├── relatorio.cls             # classe com a formatação e a interface Lua
 ├── scripts/
-│   ├── relatorio.lua         # automações (CSV, tabelas, figuras, citações)
+│   ├── relatorio.lua         # interface Lua chamada pelo LaTeX
+│   ├── relatorio/
+│   │   ├── comum.lua         # leitura de CSV e formatação numérica
+│   │   ├── tabelas.lua       # geração de tabelas
+│   │   ├── figuras.lua       # renderização das figuras
+│   │   ├── graficos.lua     # gráficos vetoriais e ajustes
+│   │   ├── referencias.lua  # citações e lista bibliográfica
+│   │   └── idioma.lua       # hifenização em português
 │   └── hyph-pt.tex           # padrões de hifenização do português
 ├── config/
 │   ├── relatorio.lua         # título, autores, matrículas e resumo
@@ -74,9 +84,7 @@ uma mensagem explícita em vez do erro genérico do `fontspec`.
 ├── dados/
 │   ├── tabela1.csv           # dados da Tabela 1
 │   └── tabela2.csv           # dados da Tabela 2 (com incertezas)
-├── figuras/
-│   ├── figura1.png
-│   └── figura2.png
+├── figuras/                  # imagens externas opcionais
 ├── Makefile
 ├── .latexmkrc
 └── .gitignore
@@ -117,29 +125,41 @@ tabela3 = {
   posicao = "H",
   colunas = {
     { titulo = "Ensaio", campo = "ensaio", formato = "texto" },
-    { titulo = "Massa (g)", campo = "massa", formato = "decimal" },
-    { titulo = "Tempo (s)", campo = "tempo", campos = { "tempo", "tempo_erro" }, formato = "mais_menos" },
+    { titulo = "Massa ($\\si{\\kilogram}$)", campo = "massa", formato = "decimal" },
+    { titulo = "Tempo ($\\si{\\second}$)", campo = "tempo", campos = { "tempo", "tempo_erro" }, formato = "mais_menos" },
   },
 }
 ```
 
 3. No texto, use `\tabela{tabela3}` e cite com `Tabela~\ref{tab:resultados}`.
 
-Formatos numéricos disponíveis:
+Formatos numéricos disponíveis. Os formatos numéricos são renderizados por
+`\num` e respeitam as opções globais do `siunitx` (vírgula decimal e ponto
+como separador de milhares):
 
 | Formato      | Efeito                                      |
 |--------------|---------------------------------------------|
 | `texto`      | valor literal do CSV                        |
-| `milhar`     | `5641` → `5.641`                            |
-| `decimal`    | `9.1` → `9,1`                               |
-| `mais_menos` | dois campos → `9,1 ± 0,2` (em modo matemático) |
+| `numero`     | valor numérico formatado por `siunitx`        |
+| `milhar`     | valor com agrupamento de milhares              |
+| `decimal`    | número decimal com vírgula                     |
+| `mais_menos` | dois campos → `\num{9.1} \pm \num{0.2}`       |
+
+Use `\num{1234.56}` para números e `\SI{9.81}{\meter\per\second\squared}`
+para grandezas com unidade. A configuração global converte o ponto decimal
+dos dados para vírgula na saída, agrupa milhares com ponto e usa o modo de
+unidades SI. Prefira unidades SI nos títulos das colunas, legendas, gráficos
+e no texto; por exemplo, escreva tempo em segundos (`\si{\second}`) e
+aceleração em `\si{\meter\per\second\squared}`.
 
 Campos opcionais: `pesos` (proporção das colunas), `espacamento_linhas`
 (padrão `1.6`), `larga` (tabela de página inteira) e `largura`.
 
 ### Figuras
 
-Coloque a imagem em `figuras/` e declare em `config/figuras.lua`:
+As figuras de exemplo são desenhadas como vetores com TikZ. Para uma fotografia
+ou imagem externa, coloque o arquivo em `figuras/` e declare em
+`config/figuras.lua`:
 
 ```lua
 figura3 = {
@@ -152,6 +172,54 @@ figura3 = {
 ```
 
 No texto: `\figura{figura3}` e `Figura~\ref{fig:montagem}`.
+
+### Figuras vetoriais com TikZ e Lua
+
+Para gráficos de dispersão, configure os pontos e os eixos em
+`config/figuras.lua`:
+
+```lua
+grafico = {
+  tipo = "grafico",
+  pontos = { { 0, 22 }, { 10800, 30 }, { 30600, 40 }, { 45000, 62 } },
+  eixo_x = {
+    minimo = 0, maximo = 144000, passo = 36000,
+    rotulo = "Tempo de estudo (\\si{\\second})",
+  },
+  eixo_y = {
+    minimo = 20, maximo = 100, passo = 20,
+    rotulo = "Nota da prova",
+  },
+  legenda = "Resultados experimentais e ajuste linear.",
+  rotulo = "fig:resultados",
+  largura = "\\columnwidth",
+  posicao = "H",
+}
+```
+
+Inclua-o no texto com `\figura{grafico}`. Lua valida e percorre os dados,
+calcula o ajuste linear por mínimos quadrados e gera os comandos TikZ para
+desenhar os eixos, a grade, os pontos e a reta. O resultado é vetorial e não
+requer uma imagem intermediária. Outros desenhos vetoriais podem ser feitos
+diretamente em ambientes `tikzpicture` no `main.tex`; a classe já carrega o
+pacote TikZ.
+
+O circuito da Figura 2 também é um desenho TikZ; sua configuração usa
+`tipo = "circuito"` e não precisa de um arquivo de imagem:
+
+```lua
+figura2 = {
+  tipo = "circuito",
+  legenda = "Esquema do circuito experimental.",
+  rotulo = "fig:circuito",
+  larga = true,
+  largura = "\\textwidth",
+}
+```
+
+O módulo Lua foi dividido por responsabilidade em `scripts/relatorio/`.
+`scripts/relatorio.lua` permanece como ponto de entrada e mantém a mesma
+interface LaTeX (`Relatorio.tabela`, `Relatorio.figura` e demais comandos).
 
 ### Tabelas e figuras de página inteira
 

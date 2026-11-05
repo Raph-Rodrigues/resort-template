@@ -14,9 +14,6 @@
 *.run.xml
 *.xdv
 
-# PDF gerado (recompile com "make")
-main.pdf
-
 # Temporários
 *~
 .DS_Store
